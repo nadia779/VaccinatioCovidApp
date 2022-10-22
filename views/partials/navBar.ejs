@@ -1,0 +1,63 @@
+<script>
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+            document.getElementById("brandText").style.fontSize = "25px";
+            $('#myNavbar').animate({
+                height: '68px'
+            },10);
+            $('#imgBrand').animate({
+                width: '3.5rem',
+                height: '3.5rem'
+            },10);
+        } else {
+            document.getElementById("brandText").style.fontSize = "35px";
+            $('#myNavbar').animate({
+                height: '100px'
+            },10);
+            $('#imgBrand').animate({
+                width: '4rem',
+                height: '4rem'
+            },10);
+
+        }
+    }
+</script>
+<nav id="myNavbar" class="navbar fixed-top">
+    <div class="container">
+        <a id="navbarBrand" class="navbar-brand" href="/<%=lang%>">
+            <img id="imgBrand" style="display: inline-block" src="/img/icon.png" alt="" width="30" height="24">
+            <div id="brandText" style="display: inline-block">
+                <h6>COVID-19</h6>
+                <h6>VACCINE</h6>
+            </div>
+        </a>
+
+        <% if (typeof user !== 'undefined'){ %>
+        <a href="/dashboard/<%=lang%>" style="font-size: 20px">
+            <i class="fas fa-user-circle"></i>
+        </a>
+        <%}%>
+    </div>
+</nav>
+<div id="langContainer">
+    <select id="lang" class="form-select form-select-lg" aria-label=".form-select-lg example">
+        <option selected="" value="language">language</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+    </select>
+</div>
+
+<script>
+    $( "#lang" )
+        .change(function() {
+            $( "#lang option:selected" ).each(function() {
+                let Params = window.location.href.split('/')
+                Params[Params.length-1] = this.value;
+                window.location.href = Params.join('/');
+            });
+        })
+
+</script>
+

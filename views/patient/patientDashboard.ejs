@@ -1,0 +1,34 @@
+
+    <div class="shadow p-3 mb-5 bg-body rounded row mt-5">
+        <% if (typeof appointment !== 'undefined'){ %>
+        <div class="card col">
+            <div class="card-body">
+                <h5 class="card-title">Rendez-vous <i class="fas fa-check-circle greenColor"></i></h5>
+                <h6 class="card-subtitle mb-2 text-muted">Details:</h6>
+                <p class="card-text">
+                <input type="text" id="appointmentDate" value="<%=appointment.date%>" hidden/>
+                <h4> <i class="fas fa-calendar-check"></i> Votre rendez-vous a été fixe le: </h4>
+                    <p id="appointmentDateP" class="lead text-capitalize"><%= moment(appointment.date).format("dddd MMMM Do YYYY")%> | <%= appointment.dayRange%> </p>
+                <h5><i class="fas fa-hospital"></i> Dans le centre: </h5>
+                    <p class="lead"><%= appointment.center%> </p>
+                </p>
+            </div>
+        </div>
+            <%} else {%>
+
+                <form method="post" action="/users/demander_rendez-vous">
+                    <input type="text" hidden name="_userId" value="<%= user._id %>">
+                    <button class="btn btn-success" id="demanderRdv">Demander Rendez-vous <i class="fas fa-calendar-check"></i></button>
+                </form>
+
+            <%}%>
+    </div>
+
+
+
+<script>
+    moment().local('fr');
+    var d = $('#appointmentDate').val();
+    console.log()
+    $('#appointmentDateP').text(moment(d).format("dddd MMMM Do YYYY"));
+</script>

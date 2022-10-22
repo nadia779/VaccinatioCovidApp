@@ -1,0 +1,125 @@
+<div class="shadow-lg p-3 mb-5 bg-body rounded row mt-5" style="padding: 20px">
+        <fieldset>
+            <legend>Chercher Patient</legend>
+            <div class="form-floating d-inline">
+                <label for="cin">Cin</label>
+                <input type="text" name="cin" class="form-control" id="cin" aria-describedby="emailHelp" placeholder="cin" >
+            </div>
+            <button  data-bs-toggle="modal"
+                     data-bs-target="#exampleModal"
+                     id="searchByCin" class="g-recaptcha btn btn-primary d-inline mt-2">Search</button>
+        </fieldset>
+</div>
+
+<div class="shadow-lg p-3 mb-5 bg-body rounded row mt-5" style="margin-top: 50px">
+    <form id="vaccinatePatient" action="/users/vaccinate_patient" method="post">
+    <input name="_userCin" id="_userCin" value="" hidden>
+        <hr>
+        <h2 class="mx-auto">Calendrier <%= moment(new Date(2021,06,01)).format("dddd, MMMM Do YYYY");%></h2>
+            <h4 class="mt-5">Les patient d'aujourd'hui</h4>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Détails</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    </div>
+                    <div class="modal-body" id="dialog_body">
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Nom</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled readonly class="form-control-plaintext" id="inputName" value="">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Prenom</label>
+                            <div class="col-sm-10">
+                                <input type="text" disabled readonly class="form-control-plaintext" id="inputLast" value="">
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                            <label for="avis">Description</label>
+                            <textarea class="form-control" name="avis" placeholder="Commentaire, diagnostique ..." id="inputAvis"></textarea>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="isVaccinated" type="checkbox" value="1" id="isVaccinated" >
+                            <label class="form-check-label" for="isVaccinated">
+                                Marqué comme vacciné
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" id="submitVaccination" class="btn btn-primary">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <% if(typeof appointments != 'undefined') {%>
+        <table class="table">
+            <thead>
+            <tr class="ui-widget-header ">
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Cin</th>
+                <th scope="col">Sexe</th>
+                <th scope="col">Age</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% appointments.forEach(function (appointment){%>
+                <tr>
+                    <th scope="row"><%= appointment.userInfo.name.toUpperCase()%></th>
+                    <th scope="row"><%=appointment.userInfo.lastname.toUpperCase() %></th>
+                    <th scope="row"><%=appointment.userInfo.cin.toUpperCase() %></th>
+                    <th scope="row"><%=appointment.userInfo.gender.toUpperCase() %></th>
+                    <th scope="row"><%=moment(new Date()).diff(moment(appointment.userInfo.birthDate), "years") %></th>
+                    <th scope="row"><button onclick="alertt(this.id)"
+                                <% let disabledAttr; appointment.userInfo.isVaccinated ? disabledAttr = 'disabled' : ''%>
+                                <%=disabledAttr%>
+                                id="moreInfo_<%=appointment._userId%>"
+                                type="button" class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                            Plus
+                        </button></th>
+                    </td>
+                </tr>
+            <% })%>
+            </tbody>
+        </table>
+    <%}%>
+</div>
+
+<script>
+     function alertt(id) {
+         $.get('/getUserInfo/'+ id.replace('moreInfo_', '') , function (data) {
+              console.log(data);
+             $('#submitVaccination').attr('disabled', false);
+              $("#inputName").attr('value', data.name);
+              $("#inputLast").attr('value', data.lastname);
+              $("#_userCin").attr('value', data.cin);
+         })
+     }
+     $('#searchByCin').click(searchByCin);
+
+     function searchByCin() {
+         let cin = $('#cin').val();
+         $.get('/getUserInfoByCin/'+ cin , function (data) {
+             $('#submitVaccination').attr('disabled', true);
+              console.log(data);
+              $("#inputName").attr('value', data.name);
+              $("#inputLast").attr('value', data.lastname);
+              $("#_userCin").attr('value', data.cin);
+              if(data.isVaccinated){
+                  $('#isVaccinated').attr("checked", true);
+                  $('#isVaccinated').attr("disabled", true);
+                  $('#inputAvis').val(data.avis);
+              }
+         })
+     }
+
+
+</script>

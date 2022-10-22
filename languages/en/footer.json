@@ -1,0 +1,26 @@
+{
+  "lang" : "en",
+  "h5_1" : "Online Services",
+  "ul1": {
+    "li1": "login",
+    "li2": "Registration",
+    "li3": "Ask for an appointment",
+    "li4": "Fill the questionnaire"
+  },
+  "h5_2": "Informations about the vaccine",
+  "ul2": {
+    "li1" : "Importance and mode of action",
+    "li2": "Safety / efficiency",
+    "li3": "Target population",
+    "li4": "Mechanism"
+
+  },
+  "h5_3": "About",
+  "ul3": {
+    "li1": "About Us",
+    "li2" :"Locations",
+    "li3" : "Privacy",
+    "li4": "Terms"
+  }
+
+}
